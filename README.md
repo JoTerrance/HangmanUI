@@ -20,3 +20,14 @@ This project is a simple **Hangman game** implemented in Java using **Swing** fo
 - `HangmanUI.java` – Contains the Swing GUI implementation and user interaction logic.
 - `HangmanLogic.java` – Handles the core game logic, secret word storage, and letter guessing.
 - `/stages/0.png` to `/stages/8.png` – Images representing Hangman stages for incorrect guesses.
+
+## Build & Run with Maven
+
+Prerequisites: JDK 17+ and Maven 3.9+ in your PATH.
+
+```bash
+mvn clean package
+mvn exec:java
+```
+
+The exec plugin is configured to start the Swing UI from `Main` and will load hangman images from `src/main/resources/stages`.
