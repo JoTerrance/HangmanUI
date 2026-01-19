@@ -1,158 +1,218 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.ArrayList;
 
 public class HangmanUI {
-    // Constants
-    private final HangmanLogic LOGIC;
-    //    private static final Color BG_COLOR = new Color(141, 69, 220);
-    private static final Color BG_COLOR = Color.white;
-    private int fails = 0;
+	// Constants
+	public HangmanLogic LOGIC;
 
-    private JLabel imageLabel;
-    private JLabel lettersGuessedLabel;
+	// private static final Color BG_COLOR = new Color(141, 69, 220);
+	private static final Color BG_COLOR = Color.white;
+	private int fails = 0;
 
-    // Constructor
-    public HangmanUI(HangmanLogic logic) {
-        this.LOGIC = logic;
+	private JLabel imageLabel;
+	private JLabel lettersGuessedLabel;
+	private JFrame frame;
 
-        // Main frame
-        JFrame frame = new JFrame("MasterMind");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+	public HangmanUI() {
+		// Main frame
+		// for testing purpose
+	}
 
-        // Ask for the word to guess
-        requestSecret();
+	// Constructor
+	public HangmanUI(HangmanLogic logic) {
+		super();
+		setLOGIC(logic);
+		init();
+	}
 
-        // Guess panel
-        frame.add(guessPanel(), BorderLayout.NORTH);
+	public void init() {
+		frame = createFrame();
+		// Ask for the word to guess
+		requestSecret();
 
-        // Image panel
-        frame.add(hangmanStatusPanel(), BorderLayout.SOUTH);
+		// Guess panel
+		frame.add(guessPanel(), BorderLayout.NORTH);
 
-        frame.setSize(400, 600);
+		// Image panel
+		frame.add(hangmanStatusPanel(), BorderLayout.SOUTH);
+
+		frame.setSize(400, 600);
 
 //        frame.pack();
-        frame.setVisible(true);
-    }
+		frame.setVisible(true);
+	}
 
-    // Input fields to enter guesses
-    public JPanel guessPanel() {
-        JPanel guessPanel = new JPanel();
-        guessPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        guessPanel.setBackground(BG_COLOR);
+	public JFrame createFrame() {
+		JFrame frame = new JFrame();
+		configureFrame(frame);
+		frame.setTitle("MasterMind");
+		return frame;
+	}
 
-        // Input field (10 columns wide)
-        JTextField inputField = new JTextField(10);
+	void configureFrame(JFrame frame) {
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+	}
 
-        // Submit button
-        JButton submitButton = new JButton("Submit");
-        submitButton.setPreferredSize(new Dimension(80, 30));
-        submitButton.setBackground(Color.WHITE);
-        submitButton.setContentAreaFilled(true);
-        submitButton.setBorderPainted(false);
-        submitButton.setFocusPainted(false);
+	// Input fields to enter guesses
+	public JPanel guessPanel() {
+		JPanel guessPanel = new JPanel();
+		guessPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+		guessPanel.setBackground(BG_COLOR);
 
-        // Submit button
-        submitButton.addActionListener(e -> processGuess(inputField, submitButton));
+		// Input field (10 columns wide)
+		JTextField inputField = new JTextField(10);
 
-        // ENTER key triggers submit
-        inputField.addActionListener(e -> processGuess(inputField, submitButton));
+		// Submit button
+		JButton submitButton = new JButton("Submit");
+		submitButton.setPreferredSize(new Dimension(80, 30));
+		submitButton.setBackground(Color.WHITE);
+		submitButton.setContentAreaFilled(true);
+		submitButton.setBorderPainted(false);
+		submitButton.setFocusPainted(false);
 
-        // Add components
-        guessPanel.add(inputField);
-        guessPanel.add(submitButton);
+		// Submit button
+		submitButton.addActionListener(e -> processGuess(inputField, submitButton));
 
-        return guessPanel;
-    }
+		// ENTER key triggers submit
+		inputField.addActionListener(e -> processGuess(inputField, submitButton));
 
-    // Image panel for hangman stages
-    public JPanel hangmanStatusPanel() {
-        JPanel hangmanPanel = new JPanel(new BorderLayout());
-        hangmanPanel.setBackground(BG_COLOR);
+		// Add components
+		guessPanel.add(inputField);
+		guessPanel.add(submitButton);
 
-        // Image
-        imageLabel = new JLabel(new ImageIcon(getClass().getResource("/stages/0.png")));
+		return guessPanel;
+	}
 
-        // Status
-        lettersGuessedLabel = new JLabel(LOGIC.getCurrentWordState());
-        // Center the text
-        lettersGuessedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	// Image panel for hangman stages
+	public JPanel hangmanStatusPanel() {
+		JPanel hangmanPanel = new JPanel(new BorderLayout());
+		hangmanPanel.setBackground(BG_COLOR);
 
-        // Adding
-        hangmanPanel.add(imageLabel, BorderLayout.SOUTH);
-        hangmanPanel.add(lettersGuessedLabel, BorderLayout.NORTH);
+		// Image
+		setImageLabel(new JLabel(new ImageIcon(getClass().getResource("/stages/0.png"))));
 
-        return hangmanPanel;
-    }
+		// Status
+		setLettersGuessedLabel(new JLabel(LOGIC.getCurrentWordState()));
+		// Center the text
+		getLettersGuessedLabel().setHorizontalAlignment(SwingConstants.CENTER);
 
-    // Pop-up to request a word to guess
-    public void requestSecret() {
-        String secretWord = JOptionPane.showInputDialog(null, "Enter the word to guess:").toLowerCase();
-        while (!secretWord.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+")) {
-            secretWord = JOptionPane.showInputDialog(null, "Enter a valid word (letters only):").toLowerCase();
-        }
-        LOGIC.setSecret(secretWord);
+		// Adding
+		hangmanPanel.add(getImageLabel(), BorderLayout.SOUTH);
+		hangmanPanel.add(getLettersGuessedLabel(), BorderLayout.NORTH);
 
-    }
+		return hangmanPanel;
+	}
 
-    // Process user's guess
-    private void processGuess(JTextField inputField, JButton submitButton) {
-        String currentGuess = inputField.getText().toLowerCase();
-        inputField.setText("");
+	// Pop-up to request a word to guess
+	public void requestSecret() {
+		String secretWord = JOptionPane.showInputDialog(null, "Enter the word to guess:").toLowerCase();
+		while (!secretWord.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+")) {
+			secretWord = JOptionPane.showInputDialog(null, "Enter a valid word (letters only):").toLowerCase();
+		}
+		LOGIC.setSecret(secretWord);
 
-        // To make sure user enters only one letter
-        if (currentGuess.length() != 1 || !currentGuess.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+")) {
-            JOptionPane.showMessageDialog(null, "Please enter exactly one letter.");
-            return;
-        }
+	}
 
-        boolean guessed = LOGIC.guessLetter(currentGuess);
-        lettersGuessedLabel.setText(LOGIC.getCurrentWordState());
+	// Process user's guess
+	// Esto permite que los tests en el mismo paquete puedan llamarlo.
+	void processGuess(JTextField inputField, JButton submitButton) {
+		String currentGuess = inputField.getText().toLowerCase();
+		inputField.setText("");
 
-        // If the guess is wrong
-        if (!guessed) {
-            fails++;
-            if (fails == 8) {
-                endGameMessage(false);
-                submitButton.setEnabled(false);
-            }
-        }
-        // If user won
-        else if (checkWin()) {
-            endGameMessage(true);
-            submitButton.setEnabled(false);
-            inputField.setEnabled(false);
-        }
+		// To make sure user enters only one letter
+		if (currentGuess.length() != 1 || !currentGuess.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+")) {
+			JOptionPane.showMessageDialog(null, "Please enter exactly one letter.");
+			return;
+		}
 
-        // Update hangman image
-        String imagePath = "/stages/" + fails + ".png";
-        imageLabel.setIcon(new ImageIcon(getClass().getResource(imagePath)));
-    }
+		boolean guessed = LOGIC.guessLetter(currentGuess);
+		getLettersGuessedLabel().setText(LOGIC.getCurrentWordState());
 
-    // Pop up at the end of the game
-    public void endGameMessage(boolean win) {
-        String message = "";
-        if (win) {
-            message = "You won!";
-        } else {
-            message = "You lost. The secret word: " + LOGIC.getSecret();
-        }
-        JOptionPane.showMessageDialog(null, message);
+		// If the guess is wrong
+		if (!guessed) {
+			setFails(getFails() + 1);
+			if (getFails() == 8) {
+				endGameMessage(false);
+				submitButton.setEnabled(false);
+			}
+		}
+		// If user won
+		else if (checkWin()) {
+			endGameMessage(true);
+			submitButton.setEnabled(false);
+			inputField.setEnabled(false);
+		}
 
-    }
+		// Update hangman image
+		String imagePath = "/stages/" + getFails() + ".png";
+		getImageLabel().setIcon(new ImageIcon(getClass().getResource(imagePath)));
+	}
 
-    // Check is user guessed the complete word
-    public boolean checkWin() {
-        String currentState = LOGIC.getCurrentWordState().replace(" ", "");
-        String secret = LOGIC.getSecret();
+	// Pop up at the end of the game
+	public void endGameMessage(boolean win) {
+		String message = "";
+		if (win) {
+			message = "You won!";
+		} else {
+			message = "You lost. The secret word: " + LOGIC.getSecret();
+		}
+		JOptionPane.showMessageDialog(null, message);
 
-        if (currentState.equalsIgnoreCase(secret)) {
-            return true;
-        }
-        return false;
+	}
 
-    }
+	// Check is user guessed the complete word
+	public boolean checkWin() {
+		String currentState = LOGIC.getCurrentWordState().replace(" ", "");
+		String secret = LOGIC.getSecret();
 
+		if (currentState.equalsIgnoreCase(secret)) {
+			return true;
+		}
+		return false;
+
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	JLabel getLettersGuessedLabel() {
+		return lettersGuessedLabel;
+	}
+
+	public HangmanLogic getLOGIC() {
+		return LOGIC;
+	}
+
+	public void setLOGIC(HangmanLogic logic) {
+		this.LOGIC = logic;
+	}
+
+	public int getFails() {
+		return fails;
+	}
+
+	public void setFails(int fails) {
+		this.fails = fails;
+	}
+
+	public void setLettersGuessedLabel(JLabel lettersGuessedLabel) {
+		this.lettersGuessedLabel = lettersGuessedLabel;
+	}
+
+	public JLabel getImageLabel() {
+		return imageLabel;
+	}
+
+	public void setImageLabel(JLabel imageLabel) {
+		this.imageLabel = imageLabel;
+	}
 
 }
