@@ -34,12 +34,7 @@ class HangmanLogicTest {
 	
 	@Test
 	void testGetSecretIsNull() {
-		//given
-		String EXPECTED_SECRET = "";
-		//when
-		String secret = hangmanlogic.getSecret();
-		//then
-		assertEquals(EXPECTED_SECRET, secret);
+		assertNull(hangmanlogic.getSecret());
 	}
 	
 	@Test
@@ -130,27 +125,11 @@ class HangmanLogicTest {
 
 	}
 	
-	
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-		System.out.println("configuracion se ejecuta una vez");
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-		System.out.println("limpieza se ejecuta una vez");
-	}
-
 	@BeforeEach
 	void setUp() throws Exception {
-		System.out.println("Configuracion antes de cada test");
 		hangmanlogic = new HangmanLogic();
 	}
 
-	@AfterEach
-	void tearDown() throws Exception {
-		System.out.println("Limpieza despues de cada test");
-	}
 
 
 }
