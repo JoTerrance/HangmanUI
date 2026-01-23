@@ -149,7 +149,10 @@ class HangmanUITest {
 
         assertEquals(2, panel.getComponentCount());
         assertTrue(panel.getComponent(0) instanceof JTextField);
-        assertTrue(panel.getComponent(1) instanceof JButton);
+        Component jbuttonTest = panel.getComponent(1);
+		assertTrue(jbuttonTest instanceof JButton);
+        assertTrue(((JButton)jbuttonTest).getBackground().equals(java.awt.Color.white));
+        assertTrue(panel.getBackground().equals(java.awt.Color.white));
     }
 
     @Test

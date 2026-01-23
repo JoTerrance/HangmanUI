@@ -165,8 +165,8 @@ public class HangmanUI {
 
 	// Check is user guessed the complete word
 	public boolean checkWin() {
-		String currentState = LOGIC.getCurrentWordState().replace(" ", "");
-		String secret = LOGIC.getSecret();
+		String currentState = LOGIC.getCurrentWordState().replace(" ", "");// C A S A -> CASA
+		String secret = LOGIC.getSecret();// CASA
 
 		if (currentState.equalsIgnoreCase(secret)) {
 			return true;
