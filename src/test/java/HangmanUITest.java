@@ -75,20 +75,15 @@ class HangmanUITest {
         when(inputField.getText()).thenReturn("a");
         when(logic.guessLetter("a")).thenReturn(true);
         when(logic.getCurrentWordState()).thenReturn("a _ _ a");
-        when(logic.getSecret()).thenReturn("a _ _ a");
 
-        // Mock JOptionPane
-        try (MockedStatic<JOptionPane> pane = mockStatic(JOptionPane.class)) {
-
-            // When
-            ui.processGuess(inputField, submitButton);
-
-            // Then
-            verify(inputField).setText("");
-            verify(ui.getLettersGuessedLabel()).setText("a _ _ a");
-            verify(submitButton, never()).setEnabled(false); // No ganó todavía
-            verify(ui.getImageLabel()).setIcon(any(ImageIcon.class));
-        }
+        // When
+        ui.processGuess(inputField, submitButton);
+        
+        // Then
+        verify(inputField).setText("");
+        verify(ui.getLettersGuessedLabel()).setText("a _ _ a");
+        verify(submitButton, never()).setEnabled(false); // No ganó todavía
+        verify(ui.getImageLabel()).setIcon(any(ImageIcon.class));
     }
     
     @Test
